@@ -3,127 +3,176 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { Box, Button, TextField, Typography, Container } from "@mui/material";
 import icon from "../logo192.png";
-const Login = ({setUser}) => {
+import { useCookies } from "react-cookie";
+
+const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [cookie, setCookie] = useCookies(["user"]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
+      setCookie("user", userCredential.user, { path: "/" });
+      console.log(cookie.user);
     } catch (error) {
       alert("Login failed: " + error.message);
     }
   };
 
   return (
-    <Container
-      maxWidth="xs"
+    <Box
       sx={{
+        minHeight: "100vh",
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f0f2f5",
-        padding: 2,
-        borderRadius: 2,
+        background: "linear-gradient(135deg, #1c1f25, #292d33)",
+        color: "#FFFFFF",
+        fontFamily: "'Roboto', sans-serif",
       }}
     >
-      {/* Logo */}
-      <img src={icon}/>
-      <Typography
-        variant="h4"
+      <Container
+        maxWidth="xs"
         sx={{
-          fontWeight: "bold",
-          color: "#1877F2",
-          mb: 2,
-          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          borderRadius: "16px",
+          padding: "40px",
+          background: "rgba(255, 255, 255, 0.1)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.37)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
         }}
       >
-        ChatApplication
-      </Typography>
+        {/* Logo */}
+        <img src={icon} alt="Logo" style={{ width: "70px", marginBottom: "20px" }} />
 
-      {/* Login Form */}
-      <Box
-        component="form"
-        onSubmit={handleLogin}
-        sx={{
-          backgroundColor: "white",
-          padding: 3,
-          borderRadius: 2,
-          boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
-          width: "100%",
-        }}
-      >
-        <TextField
-          label="Email"
-          type="email"
-          variant="outlined"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          fullWidth
-          sx={{ mb: 2 }}
-          required
-        />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          fullWidth
-          sx={{ mb: 2 }}
-          required
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          sx={{
-            backgroundColor: "#1877F2",
-            textTransform: "none",
-            fontWeight: "bold",
-            fontSize: "16px",
-            ":hover": { backgroundColor: "#165cdb" },
-          }}
-        >
-          Login
-        </Button>
         <Typography
-          variant="body2"
+          variant="h4"
           sx={{
-            color: "#1877F2",
-            mt: 2,
+            fontWeight: "bold",
+            fontSize: "28px",
+            letterSpacing: "1px",
+            marginBottom: "20px",
+            color: "#FFFFFF",
             textAlign: "center",
-            cursor: "pointer",
           }}
-          onClick={() => alert("Redirecting to forgot password...")}
         >
-          Forgotten password?
+          Welcome Back
         </Typography>
-        <Box sx={{ mt: 3, textAlign: "center" }}>
-          <Typography variant="body2" sx={{ color: "gray" }}>
+
+        {/* Login Form */}
+        <Box
+          component="form"
+          onSubmit={handleLogin}
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <TextField
+            label="Email Address"
+            type="email"
+            variant="filled"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            InputProps={{
+              style: {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+                color: "#FFFFFF",
+                borderRadius: "8px",
+              },
+            }}
+            InputLabelProps={{ style: { color: "#CCCCCC" } }}
+            sx={{ mb: 3 }}
+            required
+          />
+          <TextField
+            label="Password"
+            type="password"
+            variant="filled"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            InputProps={{
+              style: {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+                color: "#FFFFFF",
+                borderRadius: "8px",
+              },
+            }}
+            InputLabelProps={{ style: { color: "#CCCCCC" } }}
+            sx={{ mb: 3 }}
+            required
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{
+              background: "linear-gradient(135deg, #6a11cb, #2575fc)",
+              color: "#FFFFFF",
+              fontWeight: "bold",
+              padding: "12px",
+              borderRadius: "8px",
+              textTransform: "none",
+              fontSize: "16px",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
+              ":hover": {
+                background: "linear-gradient(135deg, #5e0ecc, #1b66ff)",
+              },
+            }}
+          >
+            Log In
+          </Button>
+          <Typography
+            variant="body2"
+            sx={{
+              marginTop: "16px",
+              color: "#CCCCCC",
+              textAlign: "center",
+              cursor: "pointer",
+            }}
+            onClick={() => alert("Redirecting to forgot password...")}
+          >
+            Forgot Password?
+          </Typography>
+        </Box>
+
+        <Box sx={{ mt: 4, textAlign: "center" }}>
+          <Typography variant="body2" sx={{ color: "#AAAAAA", mb: 2 }}>
             Don't have an account?
           </Typography>
           <Button
             variant="contained"
             sx={{
-              mt: 1,
-              backgroundColor: "#42b72a",
-              textTransform: "none",
+              background: "linear-gradient(135deg, #00c6ff, #0072ff)",
+              color: "#FFFFFF",
               fontWeight: "bold",
-              ":hover": { backgroundColor: "#36a420" },
+              padding: "10px 16px",
+              borderRadius: "8px",
+              textTransform: "none",
+              fontSize: "14px",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
+              ":hover": {
+                background: "linear-gradient(135deg, #00baff, #005ecb)",
+              },
             }}
             onClick={() => alert("Redirecting to sign up...")}
           >
-            Create New Account
+            Create Account
           </Button>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 
