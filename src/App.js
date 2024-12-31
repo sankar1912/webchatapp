@@ -3,7 +3,7 @@ import Login from "./Components/Login";
 import ChatRoom from "./Components/ChatRoom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { CookiesProvider, useCookies } from "react-cookie";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CallRoom from "./Components/CallRoom";
 
 const theme = createTheme({
@@ -34,7 +34,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CookiesProvider>
         <CssBaseline />
-        <Router>
+        <Router basename="/webchatapp">
           <Routes>
             <Route
               path="/"
