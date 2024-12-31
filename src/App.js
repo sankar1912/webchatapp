@@ -3,7 +3,7 @@ import Login from "./Components/Login";
 import ChatRoom from "./Components/ChatRoom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { CookiesProvider, useCookies } from "react-cookie";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import CallRoom from "./Components/CallRoom";
 
 const theme = createTheme({
@@ -19,31 +19,35 @@ const theme = createTheme({
     fontFamily: "Roboto, Arial, sans-serif",
   },
 });
+
 const App = () => {
-  const [cookie,setCookie,removeCookie]=useCookies('user');
-  const [user, setUser] = useState(cookie.user ? cookie.user:null);
+  const [cookie, setCookie, removeCookie] = useCookies(["user"]);
+  const [user, setUser] = useState(cookie.user ? cookie.user : null);
+
   useEffect(() => {
-    console.log('cookie.user:', cookie.user);
+    console.log("cookie.user:", cookie.user);
     if (cookie.user) setUser(cookie.user);
     else setUser(null);
-}, [cookie.user]);
+  }, [cookie.user]);
 
-
-  return  <ThemeProvider theme={theme}>
-    <CookiesProvider>
-    <CssBaseline />
-    <BrowserRouter>
-    <Routes>
-      <Route>
-        <Route path="/" element={user ? <ChatRoom user={user} /> : <Login setUser={setUser} />}/>
-        <Route path="/callRoom/:roomId" element={<CallRoom />} />
-      </Route>
-    </Routes>
-    </BrowserRouter>
-    </CookiesProvider>
-    
-
-  </ThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      <CookiesProvider>
+        <CssBaseline />
+        <Router>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                user ? <ChatRoom user={user} /> : <Login setUser={setUser} />
+              }
+            />
+            <Route path="/callRoom/:roomId" element={<CallRoom />} />
+          </Routes>
+        </Router>
+      </CookiesProvider>
+    </ThemeProvider>
+  );
 };
 
 export default App;
