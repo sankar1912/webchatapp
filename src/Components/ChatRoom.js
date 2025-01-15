@@ -5,75 +5,28 @@ import {
   Paper,
   List,
   ListItem,
-  TextField,
-  IconButton,
 } from "@mui/material";
-import { db, ref, push, onValue, set } from "../firebase";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useCookies } from "react-cookie";
-import { doc, updateDoc } from "firebase/firestore";
-import EditIcon from "@mui/icons-material/Edit";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import { ref, onValue, db } from "../firebase";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import { useNavigate } from "react-router-dom";
 import MessageInput from "./MessageInput";
+import { Download } from "@mui/icons-material";
 
 const ChatRoom = ({ user }) => {
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
-  const [userDetails, setUserDetails] = useState("");
-  const [editingNickname, setEditingNickname] = useState(false);
-  const [newNickname, setNewNickname] = useState("");
   const [cookie, , removeCookie] = useCookies(["user"]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [roomId, setRoomId] = useState("");
+  const messageEndRef = useRef(null);
 
-  const navigate = useNavigate();
   const otherUser =
     user.email === "ksankar1912@gmail.com"
       ? "ksankar1912@outlook.com"
       : "ksankar1912@gmail.com";
 
-  // Reference to the bottom of the chat
-  const messageEndRef = useRef(null);
-
   // Scroll to the bottom when new messages arrive
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   });
-
-  const updateNickname = async () => {
-    if (!newNickname.trim() || !userDetails) return;
-
-    try {
-      const userDocRef = doc(db, "users", userDetails.id);
-      await updateDoc(userDocRef, { nickname: newNickname });
-      setUserDetails({ ...userDetails, nickname: newNickname });
-      setEditingNickname(false);
-    } catch (error) {
-      console.error("Error updating nickname:", error);
-    }
-  };
-
-  const sendMessage = async () => {
-    if (!message.trim()) return;
-
-    const messagesRef = ref(db, "messages");
-    const newMessageRef = push(messagesRef);
-    const timestamp = new Date().getTime();
-
-    try {
-      await set(newMessageRef, {
-        sender: user.email,
-        receiver: otherUser,
-        message: message,
-        timestamp: timestamp,
-      });
-      setMessage("");
-    } catch (error) {
-      alert("Failed to send message: " + error.message);
-    }
-  };
 
   useEffect(() => {
     const messagesRef = ref(db, "messages");
@@ -100,8 +53,30 @@ const ChatRoom = ({ user }) => {
     window.location.href = "/";
   };
 
-  const handleOpenMenu = (event) => setAnchorEl(event.currentTarget);
-  const handleCloseMenu = () => setAnchorEl(null);
+  const renderMessageContent = (msg) => {
+    // If the message contains a file (image), display the image
+    if (msg.file) {
+      return (
+        <>
+        <Box
+          component="img"
+          src={msg.file}
+          alt="file attachment"
+          sx={{
+            maxWidth: "100%",
+            borderRadius: "10px",
+            marginTop: "10px",
+            boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
+          }}
+        />
+        <a href={msg.file} download ><Download style={{cursor:'pointer'}} /> </a>
+        </>
+      );
+    }
+
+    // If it's a text message, display the text
+    return <Typography>{msg.message}</Typography>;
+  };
 
   return (
     <Box
@@ -115,6 +90,7 @@ const ChatRoom = ({ user }) => {
         padding: "20px",
       }}
     >
+      {/* Chat Header */}
       <Box
         sx={{
           width: "100%",
@@ -127,35 +103,7 @@ const ChatRoom = ({ user }) => {
           justifyContent: "space-between",
         }}
       >
-        {editingNickname ? (
-          <Box display="flex" alignItems="center">
-            <TextField
-              variant="outlined"
-              placeholder="Enter new name"
-              value={newNickname}
-              onChange={(e) => setNewNickname(e.target.value)}
-              size="small"
-              sx={{ backgroundColor: "white", borderRadius: "5px" }}
-            />
-            <IconButton
-              color="primary"
-              onClick={updateNickname}
-              sx={{ marginLeft: "10px" }}
-            >
-              <CheckCircleOutlinedIcon style={{ color: "green" }} />
-            </IconButton>
-          </Box>
-        ) : (
-          <Typography variant="h8">
-            Chat with {userDetails?.nickname || "User"}
-            <IconButton
-              onClick={() => setEditingNickname(true)}
-              sx={{ cursor: "pointer" }}
-            >
-              <EditIcon />
-            </IconButton>
-          </Typography>
-        )}
+        <Typography variant="h6">Chat Room</Typography>
         <LogoutIcon
           onClick={handleLogout}
           style={{ cursor: "pointer" }}
@@ -163,6 +111,7 @@ const ChatRoom = ({ user }) => {
         />
       </Box>
 
+      {/* Chat Messages */}
       <Paper
         elevation={3}
         sx={{
@@ -203,7 +152,7 @@ const ChatRoom = ({ user }) => {
                     boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
                   }}
                 >
-                  <Typography>{msg.message}</Typography>
+                  {renderMessageContent(msg)} {/* Render message content */}
                   <Typography
                     variant="caption"
                     sx={{
@@ -215,28 +164,23 @@ const ChatRoom = ({ user }) => {
                   >
                     {messageDate}{" "}
                     <AccountCircleOutlinedIcon
-                      sx={{ paddingBlockStart: "10px", position: "relative", top: "2px" }}
+                      sx={{
+                        paddingBlockStart: "10px",
+                        position: "relative",
+                        top: "2px",
+                      }}
                     />
                   </Typography>
                 </Box>
               </ListItem>
             );
           })}
-          {/* Invisible div to track the end of the chat */}
           <div ref={messageEndRef} />
         </List>
       </Paper>
 
-      <MessageInput
-        message={message}
-        setMessage={setMessage}
-        onSendMessage={sendMessage}
-        onOpenMenu={handleOpenMenu}
-        anchorEl={anchorEl}
-        handleCloseMenu={handleCloseMenu}
-        createRoom={() => console.log("Room created")}
-        setRoomId={setRoomId}
-      />
+      {/* Message Input */}
+      <MessageInput user={user} otherUser={otherUser} />
     </Box>
   );
 };
