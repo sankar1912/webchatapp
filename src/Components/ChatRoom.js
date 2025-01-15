@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -11,7 +11,7 @@ import {
 import { db, ref, push, onValue, set } from "../firebase";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useCookies } from "react-cookie";
-import { doc, updateDoc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -33,6 +33,14 @@ const ChatRoom = ({ user }) => {
     user.email === "ksankar1912@gmail.com"
       ? "ksankar1912@outlook.com"
       : "ksankar1912@gmail.com";
+
+  // Reference to the bottom of the chat
+  const messageEndRef = useRef(null);
+
+  // Scroll to the bottom when new messages arrive
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const updateNickname = async () => {
     if (!newNickname.trim() || !userDetails) return;
@@ -214,6 +222,8 @@ const ChatRoom = ({ user }) => {
               </ListItem>
             );
           })}
+          {/* Invisible div to track the end of the chat */}
+          <div ref={messageEndRef} />
         </List>
       </Paper>
 
