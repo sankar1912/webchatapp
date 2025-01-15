@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/webchatapp/static/css/main.e6c13ad2.css",
-    "main.js": "/webchatapp/static/js/main.37739066.js",
+    "main.js": "/webchatapp/static/js/main.1c4419ea.js",
     "index.html": "/webchatapp/index.html",
     "main.e6c13ad2.css.map": "/webchatapp/static/css/main.e6c13ad2.css.map",
-    "main.37739066.js.map": "/webchatapp/static/js/main.37739066.js.map"
+    "main.1c4419ea.js.map": "/webchatapp/static/js/main.1c4419ea.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.37739066.js"
+    "static/js/main.1c4419ea.js"
   ]
 }
