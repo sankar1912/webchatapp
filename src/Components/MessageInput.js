@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Box, TextField, IconButton, Menu, MenuItem } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import CallIcon from "@mui/icons-material/Call";
@@ -13,6 +13,22 @@ const MessageInput = ({
   createRoom,
   setRoomId,
 }) => {
+  const inputRef = useRef(null);
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      onSendMessage(); // Trigger the send message action
+      inputRef.current?.focus(); // Refocus the input field
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent line break on Enter
+      handleSendMessage();
+    }
+  };
+
   return (
     <Box
       display="flex"
@@ -26,10 +42,12 @@ const MessageInput = ({
       }}
     >
       <TextField
+        inputRef={inputRef}
         variant="outlined"
-        placeholder="Type a message..."
+        placeholder="Say, Hi..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyPress={handleKeyPress}
         fullWidth
         sx={{ marginRight: "10px" }}
       />
@@ -64,7 +82,7 @@ const MessageInput = ({
       </IconButton>
       <IconButton
         color="primary"
-        onClick={onSendMessage}
+        onClick={handleSendMessage}
         sx={{
           backgroundColor: "#075E54",
           color: "white",
