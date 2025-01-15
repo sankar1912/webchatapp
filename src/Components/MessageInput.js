@@ -1,27 +1,79 @@
-import React, { useState } from "react";
+import React from "react";
+import { Box, TextField, IconButton, Menu, MenuItem } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import CallIcon from "@mui/icons-material/Call";
 
-const MessageInput = ({ onSend }) => {
-  const [message, setMessage] = useState("");
-
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (message.trim()) {
-      onSend(message);
-      setMessage("");
-    }
-  };
-
+const MessageInput = ({
+  message,
+  setMessage,
+  onSendMessage,
+  onOpenMenu,
+  anchorEl,
+  handleCloseMenu,
+  createRoom,
+  setRoomId,
+}) => {
   return (
-    <form onSubmit={handleSend}>
-      <input
-        type="text"
+    <Box
+      display="flex"
+      alignItems="center"
+      sx={{
+        width: "100%",
+        backgroundColor: "white",
+        borderRadius: "0 0 10px 10px",
+        padding: "10px",
+        boxShadow: "0px -2px 5px rgba(0,0,0,0.1)",
+      }}
+    >
+      <TextField
+        variant="outlined"
+        placeholder="Type a message..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message"
-        required
+        fullWidth
+        sx={{ marginRight: "10px" }}
       />
-      <button type="submit">Send</button>
-    </form>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            createRoom();
+            handleCloseMenu();
+          }}
+        >
+          Create Room
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleCloseMenu();
+            const roomId = prompt("Enter Room ID:");
+            setRoomId(roomId);
+          }}
+        >
+          Join Room
+        </MenuItem>
+      </Menu>
+      <IconButton onClick={onOpenMenu}>
+        <CallIcon />
+      </IconButton>
+      <IconButton
+        color="primary"
+        onClick={onSendMessage}
+        sx={{
+          backgroundColor: "#075E54",
+          color: "white",
+          "&:hover": { backgroundColor: "#056345" },
+        }}
+      >
+        <SendIcon />
+      </IconButton>
+    </Box>
   );
 };
 
