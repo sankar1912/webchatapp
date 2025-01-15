@@ -40,7 +40,7 @@ const ChatRoom = ({ user }) => {
   // Scroll to the bottom when new messages arrive
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  });
 
   const updateNickname = async () => {
     if (!newNickname.trim() || !userDetails) return;
