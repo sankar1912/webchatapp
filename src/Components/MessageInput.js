@@ -82,7 +82,7 @@ const MessageInput = ({ user, otherUser }) => {
       sx={{
         width: "100%",
         padding: "10px",
-        backgroundColor: "#f9f9f9",
+        background: "rgba(255,255,255,0.8)",
         borderTop: "1px solid #ddd",
       }}
     >

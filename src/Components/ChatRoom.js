@@ -12,7 +12,7 @@ import { ref, onValue, db } from "../firebase";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import MessageInput from "./MessageInput";
 import { Download } from "@mui/icons-material";
-
+import backgroundImage from './download.jpeg';
 const ChatRoom = ({ user }) => {
   const [messages, setMessages] = useState([]);
   const [cookie, , removeCookie] = useCookies(["user"]);
@@ -85,7 +85,7 @@ const ChatRoom = ({ user }) => {
       justifyContent="space-between"
       alignItems="center"
       sx={{
-        backgroundColor: "#f0f2f5",
+        backgroundColor: "black",
         height: "100vh",
         padding: "20px",
       }}
@@ -119,7 +119,7 @@ const ChatRoom = ({ user }) => {
           width: "100%",
           overflowY: "auto",
           padding: "10px",
-          backgroundColor: "#fff",
+          background: `url(${backgroundImage}) no-repeat center center / cover`,
           borderRadius: "10px",
         }}
       >

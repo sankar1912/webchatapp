@@ -14,6 +14,10 @@ const theme = createTheme({
     secondary: {
       main: "#42b72a", // Facebook Green
     },
+    background: {
+      default: "#000000", // Black background for the entire app
+      paper: "#FFFFFF", // Default white background for Paper components
+    },
   },
   typography: {
     fontFamily: "Roboto, Arial, sans-serif",
