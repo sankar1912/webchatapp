@@ -1,13 +1,14 @@
 {
   "files": {
     "main.css": "/webchatapp/static/css/main.e6c13ad2.css",
-    "main.js": "/webchatapp/static/js/main.94519e47.js",
+    "main.js": "/webchatapp/static/js/main.0dc8b765.js",
+    "static/media/download.jpeg": "/webchatapp/static/media/download.715edb77c1258cc8563c.jpeg",
     "index.html": "/webchatapp/index.html",
     "main.e6c13ad2.css.map": "/webchatapp/static/css/main.e6c13ad2.css.map",
-    "main.94519e47.js.map": "/webchatapp/static/js/main.94519e47.js.map"
+    "main.0dc8b765.js.map": "/webchatapp/static/js/main.0dc8b765.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.94519e47.js"
+    "static/js/main.0dc8b765.js"
   ]
 }
